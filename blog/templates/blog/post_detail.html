@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <a href="{% url 'home' %}">Back to all Posts</a>
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content }}</p>
+    <a href="{% url 'post_update' post.pk %}">Edit</a>
+    <a href="{% url 'post_delete' post.pk %}">Delete</a>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in post.comments.all %}
+            <li>
+                {{ comment.content }} - {{ comment.user.username }}
+                <a href="{% url 'comment_delete' comment.pk %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add a comment:</h2>
+    <form method="post" action="{% url 'add_comment_to_post' post.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Comment</button>
+    </form>
+{% endblock %}
